@@ -1,4 +1,4 @@
-package co.edu.eam.distribuidos.sockets;
+package co.edu.eam.distribuidos.sockets.hiloxcliente;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,34 +7,36 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Date;
 
-public class RequestThread implements Runnable {
+public class HiloXCliente implements Runnable {
 
   private Socket connection;
 
-  public RequestThread(Socket connection) {
+  public HiloXCliente(Socket connection) {
     this.connection = connection;
   }
 
   @Override
   public void run() {
     try {
-
       PrintStream salida = new PrintStream(connection.getOutputStream());
       BufferedReader entrada = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+      boolean exit = false;
 
-      String comando = entrada.readLine().toLowerCase();
+      while(!exit){
+        String comando = entrada.readLine().toLowerCase();
+        System.out.println(comando);
 
-      System.out.println(comando);
+        switch (comando) {
+          case "hora":  salida.println(new Date().toString()); break;
+          case "suma":
+            int n1 = Integer.valueOf(entrada.readLine());
+            int n2 = Integer.valueOf(entrada.readLine());
 
-      switch (comando) {
-        case "hora":  salida.println(new Date().toString()); break;
-        case "suma":
-          int n1 = Integer.valueOf(entrada.readLine());
-          int n2 = Integer.valueOf(entrada.readLine());
-
-          salida.println(n1 + n2);
+            salida.println(n1 + n2);
+            break;
+          case "exit":  exit = true; break;
+        }
       }
-
       connection.close();
 
     }catch (Exception exception){

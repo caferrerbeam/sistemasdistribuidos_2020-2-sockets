@@ -1,4 +1,4 @@
-package co.edu.eam.distribuidos.sockets;
+package co.edu.eam.distribuidos.sockets.peticionrespuesta;
 
 import java.io.IOException;
 import java.io.PrintStream;
